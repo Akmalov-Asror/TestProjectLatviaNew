@@ -31,7 +31,7 @@ public class TaskRepository : ITaskRepository
             DueDate = task.DueDate,
             Status = task.Status
         };
-        if (_check is null)
+        if (_check.Tasks is null)
         {
             _check.Tasks = new List<Domains.Task> {newTask };
         }

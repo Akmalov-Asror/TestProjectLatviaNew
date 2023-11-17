@@ -64,7 +64,7 @@ public class TaskController : Controller
     [Authorize(Roles = "ADMIN,MANAGER")]
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("Id,Title,Description,DueDate,Status")] Task task)
+    public async Task<IActionResult> Create([Bind("Id,Title,Description,DueDate,Status,Email")] Task task)
     {
         if (!ModelState.IsValid) return View(task);
         task.DueDate = DateTime.SpecifyKind(task.DueDate, DateTimeKind.Utc);
@@ -76,7 +76,7 @@ public class TaskController : Controller
             return View(task);
         }
         var user = await _userManager.GetUserAsync(HttpContext.User);
-        await _taskRepository.CreateTaskAsync(task);
+        await _taskRepository.CreateTaskAsync(task,User);
         await _taskRepository.CreateAudit(task, null, "Create", user);
         _toastNotification.AddSuccessToastMessage("Created successfully!");
         return RedirectToAction(nameof(Index));

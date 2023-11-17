@@ -9,7 +9,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace TestProjectLatvia.Migrations
 {
     /// <inheritdoc />
-    public partial class Init : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -69,22 +69,6 @@ namespace TestProjectLatvia.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AuditLog", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Tasks",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Title = table.Column<string>(type: "text", nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: false),
-                    DueDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    Status = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Tasks", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -193,14 +177,36 @@ namespace TestProjectLatvia.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Tasks",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Title = table.Column<string>(type: "text", nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: false),
+                    DueDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    Status = table.Column<int>(type: "integer", nullable: false),
+                    UserId = table.Column<string>(type: "text", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Tasks", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Tasks_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                });
+
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "332c58d2-0b9d-46c8-93d9-ae456f4f1f3e", null, "ADMIN", "ADMIN" },
-                    { "3b80184c-7839-451d-9325-0a6e131bebf5", null, "USER", "USER" },
-                    { "e5acf7cb-33dc-465d-92ba-521ef3715507", null, "MANAGER", "MANAGER" }
+                    { "37e0df38-dd06-41a0-abd5-81ca052fc998", null, "USER", "USER" },
+                    { "3da01069-f323-4e5f-9368-f7f0840c495c", null, "MANAGER", "MANAGER" },
+                    { "5942ddf5-20ec-4de6-977f-60821f2cb294", null, "ADMIN", "ADMIN" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -239,6 +245,11 @@ namespace TestProjectLatvia.Migrations
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tasks_UserId",
+                table: "Tasks",
+                column: "UserId");
         }
 
         /// <inheritdoc />

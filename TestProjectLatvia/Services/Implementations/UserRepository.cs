@@ -120,4 +120,13 @@ public class UserRepository : IUserRepository
         return model ?? new CreateUserModel();
 
     }
+    public async Task<List<AuditLog>> SortByUserName(string name)
+    {
+        var auditLogs = _context.AuditLog
+            .AsEnumerable()
+            .Where(log => log.UserName.Equals(name, StringComparison.OrdinalIgnoreCase))
+            .ToList();
+
+        return auditLogs;
+    }
 }

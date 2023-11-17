@@ -12,8 +12,8 @@ using TestProjectLatvia.Data;
 namespace TestProjectLatvia.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20231117125621_Init")]
-    partial class Init
+    [Migration("20231117155036_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -53,19 +53,19 @@ namespace TestProjectLatvia.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "332c58d2-0b9d-46c8-93d9-ae456f4f1f3e",
+                            Id = "5942ddf5-20ec-4de6-977f-60821f2cb294",
                             Name = "ADMIN",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "e5acf7cb-33dc-465d-92ba-521ef3715507",
+                            Id = "3da01069-f323-4e5f-9368-f7f0840c495c",
                             Name = "MANAGER",
                             NormalizedName = "MANAGER"
                         },
                         new
                         {
-                            Id = "3b80184c-7839-451d-9325-0a6e131bebf5",
+                            Id = "37e0df38-dd06-41a0-abd5-81ca052fc998",
                             Name = "USER",
                             NormalizedName = "USER"
                         });
@@ -230,7 +230,12 @@ namespace TestProjectLatvia.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("text");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Tasks");
                 });
@@ -348,6 +353,18 @@ namespace TestProjectLatvia.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("TestProjectLatvia.Domains.Task", b =>
+                {
+                    b.HasOne("TestProjectLatvia.Domains.User", null)
+                        .WithMany("Tasks")
+                        .HasForeignKey("UserId");
+                });
+
+            modelBuilder.Entity("TestProjectLatvia.Domains.User", b =>
+                {
+                    b.Navigation("Tasks");
                 });
 #pragma warning restore 612, 618
         }

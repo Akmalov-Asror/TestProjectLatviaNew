@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using TestProjectLatvia.Data;
 using TestProjectLatvia.Domains;
@@ -19,8 +20,10 @@ public class TaskRepository : ITaskRepository
 
     public async Task<List<Domains.Task>> GetAllTasksAsync() => await _context.Tasks.ToListAsync();
 
-    public async Tasks CreateTaskAsync(Domains.Task task)
+    public async Tasks CreateTaskAsync(Domains.Task task, ClaimsPrincipal claim)
     {
+        var _check = await _context.Users.FirstOrDefaultAsync(x => x.UserName == claim.Identity.Name);
+
         var newTask = new Domains.Task
         {
             Title = task.Title,
@@ -28,7 +31,7 @@ public class TaskRepository : ITaskRepository
             DueDate = task.DueDate,
             Status = task.Status
         };
-
+        _check.Tasks.Add(newTask);
         _context.Tasks.Add(newTask);
         await _context.SaveChangesAsync();
     }

@@ -1,0 +1,145 @@
+﻿<head>
+  <meta charset="UTF-8">
+  
+
+    <link rel="apple-touch-icon" type="image/png" href="https://cpwebassets.codepen.io/assets/favicon/apple-touch-icon-5ae1a0698dcc2402e9712f7d01ed509a57814f994c660df9f7a952f3060705ee.png" />
+
+    <meta name="apple-mobile-web-app-title" content="CodePen">
+
+    <link rel="shortcut icon" type="image/x-icon" href="https://cpwebassets.codepen.io/assets/favicon/favicon-aec34940fbc1a6e787974dcd360f2c6b63348d4b1f4e06c77743096d55480f33.ico" />
+
+    <link rel="mask-icon" type="image/x-icon" href="https://cpwebassets.codepen.io/assets/favicon/logo-pin-b4b4269c16397ad2f0f7a01bcdf513a1994f4c94b8af2f191c09eb0d601762b1.svg" color="#111" />
+
+  <title>CodePen - Neumorphic button, Neumorphism with simple css</title>
+
+    <link rel="canonical" href="https://codepen.io/techtomato/pen/MWeLqzB">
+
+  
+<style>
+@@import url("https://fonts.googleapis.com/css2?family=Oxygen:wght@300;400;700&display=swap");
+:root {
+  --darktomato: #753023;
+}
+html,
+body {
+  min-height: 100vh;
+}
+
+body {
+  background-color: #222d45;
+  display: flex;
+}
+
+.container {
+    flex-direction: column;
+    align-items: center;
+    display: flex;
+    margin: auto;
+
+}
+
+h3 {
+  margin: 0;
+  font-family: "Oxygen", sans-serif;
+  font-weight: 300;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  color: white;
+  text-shadow: 0 0 10px white;
+  font-size: 2rem;
+}
+p {
+  letter-spacing: 2px;
+  padding-top: 5px;
+  font-size: 1rem;
+  color: #FFF6;
+  margin: 0;
+  font-family: "Oxygen", sans-serif;
+}
+
+a {
+  text-decoration: none;
+  justify-content: center;
+  width: 300px;
+  display: block;
+  margin-top: 35px;
+  border: 2px solid tomato;
+  cursor: pointer;
+  font-family: "Oxygen", sans-serif;
+  font-size: 1.3rem;
+  font-weight: 400;
+  letter-spacing: 5px;
+  color: #b1bcc8;
+  background-color: #0002;
+  border-radius: 14px;
+  padding: 16px 30px 16px 30px;
+  box-shadow: -8px -8px 17px #f664, 10px 10px 30px #000,
+    inset -1px -1px 2px #000, inset 1px 1px 3px #fff4;
+  animation: shadowLeave 0.3s;
+}
+
+a:hover {
+  letter-spacing: 2.5px;
+  font-weight: 600;
+
+  color: white;
+  background-color: var(--darktomato);
+  text-shadow: 0 0 8px #faa5;
+  box-shadow: 
+    1px 1px 5px #0001, -1px -1px 5px #fff1;
+  animation: shadowEnter 0.15s;
+}
+
+a:active {
+  box-shadow: inset 8px 8px 17px #0009, inset -6px -6px 13px #fff2;
+}
+@@-webkit-keyframes shadowEnter {
+  0% {
+    box-shadow: -7px -7px 25px #f666, 10px 10px 30px #000,
+      inset -1px -1px 2px #000, inset 1px 1px 3px #fff4;
+    font-weight: 400;
+    letter-spacing: 5px;
+  }
+
+  100% {
+    box-shadow: 
+      1px 1px 5px #0001, -1px -1px 5px #fff1;
+     font-weight: 600;
+    letter-spacing: 2.5px;
+  }
+}
+
+@@-webkit-keyframes shadowLeave {
+  0% {
+    box-shadow: 0 0 0 #fff2, 0 0 #000, inset 0 -1px 0 #000, inset 0 0 0 #fff4;
+    font-weight: 600;
+    letter-spacing: 2.5px;
+  }
+
+  100% {
+    box-shadow: -7px -7px 25px #fff2, 10px 10px 30px #000,
+      inset -1px -1px 2px #000, inset 1px 1px 3px #fff4;
+    font-weight: 400;
+  letter-spacing: 5px;
+  }
+}
+
+
+</style>
+
+  <script>
+  window.console = window.console || function(t) {};
+</script>
+
+  
+  
+</head>
+<body>
+<div class="container">
+    <h3>Neon-morphism</h3>
+    <p>techtomato.hashnode.com</p>
+    <a asp-controller="Account" asp-action="Register" type="submit">Register</a>
+    <a asp-controller="Account" asp-action="Login" type="submit">Login</a>
+    <a asp-controller="Account" asp-action="RegisterAdmin" type="submit">Register Admin</a>
+</div>
+</body>

@@ -1,0 +1,74 @@
+﻿@model TestProjectLatvia.ViewModels.AuditLogViewModel
+@{
+    ViewBag.Title = "Audit Log Table";
+}
+<style>
+    .news{
+        display: flex;
+        justify-content: space-between;
+        gap: 30px;
+    }
+</style>
+
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead class="thead-dark">
+            <tr>
+                <th>ID</th>
+                <th>Action</th>
+                <th>User Name</th>
+                <th>Controller Name</th>
+                <th>Date Time</th>
+                <th>Old Value</th>
+                <th>New Value</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var log in Model.FilteredLogs)
+            {
+                <tr>
+                    <td>@log.Id</td>
+                    <td>@log.Action</td>
+                    <td>@log.UserName</td>
+                    <td>@log.ControllerName</td>
+                    <td>@log.DateTime</td>
+                    <td>@log.OldValue</td>
+                    <td>@log.NewValue</td>
+                </tr>
+            }
+            @if (Model.FilteredLogs == null || !Model.FilteredLogs.Any())
+            {
+                <tr>
+                    <td>
+                        Audit not found
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@section scripts {
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Attach change event to From Date input
+            $("#FromDate").on("change", function () {
+                var fromDateValue = $(this).val();
+
+                // Set the minimum value of To Date to be the selected From Date
+                $("#ToDate").attr("min", fromDateValue);
+            });
+
+            // Attach change event to To Date input
+            $("#ToDate").on("change", function () {
+                var toDateValue = $(this).val();
+
+                // Set the maximum value of From Date to be the selected To Date
+                $("#FromDate").attr("max", toDateValue);
+            });
+        });
+    </script>
+}

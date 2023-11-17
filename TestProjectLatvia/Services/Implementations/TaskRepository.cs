@@ -31,7 +31,15 @@ public class TaskRepository : ITaskRepository
             DueDate = task.DueDate,
             Status = task.Status
         };
-        _check.Tasks.Add(newTask);
+        if (_check is null)
+        {
+            _check.Tasks = new List<Domains.Task> {newTask };
+        }
+        else
+        {
+            _check.Tasks.Add(newTask);
+        }
+        
         _context.Tasks.Add(newTask);
         await _context.SaveChangesAsync();
     }

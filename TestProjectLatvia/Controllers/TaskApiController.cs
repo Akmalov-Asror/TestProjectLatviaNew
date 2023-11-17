@@ -33,7 +33,7 @@ public class TaskApiController : ControllerBase
             throw new Exception("please enter again date");
         }
         var user = await _userManager.GetUserAsync(HttpContext.User);
-        await _taskRepository.CreateTaskAsync(task);
+        await _taskRepository.CreateTaskAsync(task, User);
         await _taskRepository.CreateAudit(task, null, "Create", user);
         return Ok();
     }

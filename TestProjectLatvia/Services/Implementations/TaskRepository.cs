@@ -22,7 +22,7 @@ public class TaskRepository : ITaskRepository
 
     public async Tasks CreateTaskAsync(Domains.Task task, ClaimsPrincipal claim)
     {
-        var _check = await _context.Users.FirstOrDefaultAsync(x => x.UserName == claim.Identity.Name);
+        var _check = await _context.Users.Include(user => user.Tasks).FirstOrDefaultAsync(x => x.UserName == claim.Identity.Name);
 
         var newTask = new Domains.Task
         {

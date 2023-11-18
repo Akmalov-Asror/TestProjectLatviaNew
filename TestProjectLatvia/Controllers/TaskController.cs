@@ -64,19 +64,20 @@ public class TaskController : Controller
     [Authorize(Roles = "ADMIN,MANAGER")]
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("Id,Title,Description,DueDate,Status,Email")] Task task)
+    public async Task<IActionResult> Create([Bind("Id,Title,Description,DueDate,Status,Email")] Task task, string email)
     {
+        
         if (!ModelState.IsValid) return View(task);
         task.DueDate = DateTime.SpecifyKind(task.DueDate, DateTimeKind.Utc);
 
         DateTime thresholdDate = new DateTime(2030, 1, 1);
-        if (task.DueDate > thresholdDate)
+        var oldTime = DateTime.UtcNow;
+        if (task.DueDate > thresholdDate && task.DueDate < oldTime)
         {
-            _toastNotification.AddErrorToastMessage("You can enter until January 1, 2030!");
-            return View(task);
+            throw new Exception("please enter again date");
         }
         var user = await _userManager.GetUserAsync(HttpContext.User);
-        await _taskRepository.CreateTaskAsync(task);
+        await _taskRepository.CreateTaskAsync(task, email);
         await _taskRepository.CreateAudit(task, null, "Create", user);
         _toastNotification.AddSuccessToastMessage("Created successfully!");
         return RedirectToAction(nameof(Index));
@@ -164,8 +165,8 @@ public class TaskController : Controller
         _toastNotification.AddSuccessToastMessage("your models deleted!");
         return RedirectToAction(nameof(Index));
     }
-
-    public async Task<IActionResult> CreateTaskForUser()
+    [Authorize(Roles = "ADMIN")]
+    public IActionResult CreateTaskForUser()
     {
         return View();
     }

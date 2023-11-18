@@ -9,7 +9,7 @@ public interface ITaskRepository
 {
     Task<Domains.Task> GetTaskByIdAsync(int taskId);
     Task<List<Domains.Task>> GetAllTasksAsync();
-    Task CreateTaskAsync(Domains.Task task);
+    Task CreateTaskAsync(Domains.Task task, string email);
     Task<Domains.Task> UpdateTaskAsync(Domains.Task task);
     Task<Domains.Task> DeleteTaskAsync(int taskId);
     public Task<Domains.Task> GetOldValueAsync(int id);
@@ -24,4 +24,6 @@ public interface ITaskRepository
     ///     Returns a Task representing the completion of the audit log creation.
     /// </returns>
     public Task<Domains.Task> CreateAudit(Domains.Task entity, Domains.Task oldValue, string actionType, User user);
+
+    Task<Domains.Task> CheckTaskName(Domains.Task task);
 }

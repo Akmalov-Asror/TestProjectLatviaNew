@@ -1,7 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using System.Security.Claims;
-using System.Threading.Tasks;
 using TestProjectLatvia.Data;
 using TestProjectLatvia.Domains;
 using TestProjectLatvia.Services.Interfaces;
@@ -13,16 +13,20 @@ namespace TestProjectLatvia.Services.Implementations;
 public class TaskRepository : ITaskRepository
 {
     private readonly AppDbContext _context;
-
-    public TaskRepository(AppDbContext context) => _context = context;
+    private readonly UserManager<User> _userManager;
+    public TaskRepository(AppDbContext context, UserManager<User> userManager)
+    {
+        _context = context;
+        _userManager = userManager;
+    }
 
     public async Task<Domains.Task> GetTaskByIdAsync(int taskId) => await _context.Tasks.FirstOrDefaultAsync(x => x.Id == taskId);
 
     public async Task<List<Domains.Task>> GetAllTasksAsync() => await _context.Tasks.ToListAsync();
 
-    public async Tasks CreateTaskAsync(Domains.Task task)
+    public async Tasks CreateTaskAsync(Domains.Task task, string email)
     {
-
+        var _check = await _context.Users.Include(x => x.Tasks).FirstOrDefaultAsync(x => x.Email == email);
         var newTask = new Domains.Task
         {
             Title = task.Title,
@@ -30,7 +34,15 @@ public class TaskRepository : ITaskRepository
             DueDate = task.DueDate,
             Status = task.Status
         };
-        
+        if (_check.Tasks is null)
+        {
+            _check.Tasks = new List<Domains.Task> { newTask };
+        }
+        else
+        {
+            _check.Tasks.Add(newTask);
+        }
+
         _context.Tasks.Add(newTask);
         await _context.SaveChangesAsync();
     }
@@ -83,5 +95,28 @@ public class TaskRepository : ITaskRepository
         {
             throw new Exception("Error saving audit log.", ex);
         }
+    }
+
+    public async Task<Task> CheckTaskName(Task task)
+    {
+        var checkBase = await _context.Tasks.FindAsync(task);
+        return checkBase ?? new Task();
+    }
+
+    public async Task<User> AddTaskForUser(string email, string taskName)
+    {
+        var check = await _context.Users.FirstOrDefaultAsync(x => x.Email == email);
+        var checkTask = await _context.Tasks.FirstOrDefaultAsync(x => x.Title == taskName);
+        if (check.Tasks == null)
+        {
+            check.Tasks = new List<Task>{checkTask};
+        }
+        else
+        {
+            check.Tasks.Add(checkTask);
+        }
+
+        await _context.SaveChangesAsync();
+        return check;   
     }
 }

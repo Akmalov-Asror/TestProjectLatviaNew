@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using TestProjectLatvia.Domains;
@@ -23,17 +24,18 @@ public class TaskApiController : ControllerBase
     public async Task<IActionResult> Index() => Ok(await _taskRepository.GetAllTasksAsync());
 
     [HttpPost]
-    public async Task<IActionResult> Create(Tasks task)
+    public async Task<IActionResult> Create(Tasks task, string email)
     {
         task.DueDate = DateTime.SpecifyKind(task.DueDate, DateTimeKind.Utc);
 
         DateTime thresholdDate = new DateTime(2030, 1, 1);
-        if (task.DueDate > thresholdDate)
+        var oldTime = DateTime.UtcNow;
+        if (task.DueDate > thresholdDate && task.DueDate < oldTime)
         {
             throw new Exception("please enter again date");
         }
         var user = await _userManager.GetUserAsync(HttpContext.User);
-        await _taskRepository.CreateTaskAsync(task);
+        await _taskRepository.CreateTaskAsync(task, email);
         await _taskRepository.CreateAudit(task, null, "Create", user);
         return Ok();
     }

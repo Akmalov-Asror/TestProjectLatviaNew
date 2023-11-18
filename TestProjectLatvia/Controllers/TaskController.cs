@@ -76,7 +76,7 @@ public class TaskController : Controller
             return View(task);
         }
         var user = await _userManager.GetUserAsync(HttpContext.User);
-        await _taskRepository.CreateTaskAsync(task,User);
+        await _taskRepository.CreateTaskAsync(task);
         await _taskRepository.CreateAudit(task, null, "Create", user);
         _toastNotification.AddSuccessToastMessage("Created successfully!");
         return RedirectToAction(nameof(Index));
@@ -163,5 +163,10 @@ public class TaskController : Controller
         await _taskRepository.CreateAudit(task, null, "Delete", user);
         _toastNotification.AddSuccessToastMessage("your models deleted!");
         return RedirectToAction(nameof(Index));
+    }
+
+    public async Task<IActionResult> CreateTaskForUser()
+    {
+        return View();
     }
 }

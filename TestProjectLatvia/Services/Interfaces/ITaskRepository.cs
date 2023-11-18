@@ -9,7 +9,7 @@ public interface ITaskRepository
 {
     Task<Domains.Task> GetTaskByIdAsync(int taskId);
     Task<List<Domains.Task>> GetAllTasksAsync();
-    Task CreateTaskAsync(Domains.Task task, ClaimsPrincipal claim);
+    Task CreateTaskAsync(Domains.Task task);
     Task<Domains.Task> UpdateTaskAsync(Domains.Task task);
     Task<Domains.Task> DeleteTaskAsync(int taskId);
     public Task<Domains.Task> GetOldValueAsync(int id);

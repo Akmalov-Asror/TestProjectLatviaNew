@@ -20,9 +20,8 @@ public class TaskRepository : ITaskRepository
 
     public async Task<List<Domains.Task>> GetAllTasksAsync() => await _context.Tasks.ToListAsync();
 
-    public async Tasks CreateTaskAsync(Domains.Task task, ClaimsPrincipal claim)
+    public async Tasks CreateTaskAsync(Domains.Task task)
     {
-        var _check = await _context.Users.Include(user => user.Tasks).FirstOrDefaultAsync(x => x.UserName == claim.Identity.Name);
 
         var newTask = new Domains.Task
         {
@@ -31,14 +30,6 @@ public class TaskRepository : ITaskRepository
             DueDate = task.DueDate,
             Status = task.Status
         };
-        if (_check.Tasks is null)
-        {
-            _check.Tasks = new List<Domains.Task> {newTask };
-        }
-        else
-        {
-            _check.Tasks.Add(newTask);
-        }
         
         _context.Tasks.Add(newTask);
         await _context.SaveChangesAsync();
